@@ -2,7 +2,7 @@
 
 cd web
 skaffold build --interactive=false \
---default-repo {INSERT YOUR ARTIFACT REPOSITORY HERE} \
+--default-repo us-central1-docker.pkg.dev/qwiklabs-gcp-03-6d56336dee17/cicd-challenge \
 --file-output artifacts.json
 cd ..
 
@@ -70,11 +70,12 @@ sed -i "s/prod/cd-production/" clouddeploy-config/target-cd-production.yaml
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-for CONTEXT in ${CONTEXTS[@]}
-do
-    envsubst < clouddeploy-config/target-$CONTEXT.yaml.template > clouddeploy-config/target-$CONTEXT.yaml
-    gcloud beta deploy apply --file clouddeploy-config/target-$CONTEXT.yaml
-done
+envsubst < clouddeploy-config/target-staging.yaml.template > clouddeploy-config/target-cd-staging.yaml
+envsubst < clouddeploy-config/target-prod.yaml.template > clouddeploy-config/target-cd-production.yaml
+sed -i "s/staging/cd-staging/" clouddeploy-config/target-cd-staging.yaml
+sed -i "s/prod/cd-production/" clouddeploy-config/target-cd-production.yaml
+
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -120,9 +121,10 @@ cat web/skaffold.yaml
 
 cd web
 skaffold build --interactive=false \
---default-repo <#### Make Changes Here ####> \
+--default-repo <us-central1-docker.pkg.dev/qwiklabs-gcp-03-6d56336dee17/cicd-challenge> \
 --file-output artifacts.json
 cd ..
+
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
